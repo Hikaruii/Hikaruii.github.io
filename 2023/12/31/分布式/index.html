@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+
+
+<html theme="dark" showBanner="true" hasBanner="false" > 
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet">
+<script src="/js/color.global.min.js" ></script>
+<script src="/js/load-settings.js" ></script>
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+
+  
+  <title>分布式系统速成 | 追着光梦游</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <meta name="description" content="分布式系统速成复习要点第一章 概述 分布式系统的定义、特征、分类、目标 第二章 体系结构 典型体系结构；中间件 第四章 通信 中间件通信协议；RPC原理及过程；多播通信 第五章 命名系统 非结构化命名：基于原籍的方法、分布式散列表法 结构化命名：名字解析 第六章 同步化 物理时钟的实现与同步算法 逻辑时钟同步：Lamport算法、向量时钟 互斥算法：集中式、分布式、令牌环的比较 选举算法：霸道算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统速成">
+<meta property="og:url" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/index.html">
+<meta property="og:site_name" content="追着光梦游">
+<meta property="og:description" content="分布式系统速成复习要点第一章 概述 分布式系统的定义、特征、分类、目标 第二章 体系结构 典型体系结构；中间件 第四章 通信 中间件通信协议；RPC原理及过程；多播通信 第五章 命名系统 非结构化命名：基于原籍的方法、分布式散列表法 结构化命名：名字解析 第六章 同步化 物理时钟的实现与同步算法 逻辑时钟同步：Lamport算法、向量时钟 互斥算法：集中式、分布式、令牌环的比较 选举算法：霸道算法">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226160659549.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226161848867.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226115217329-1703562738586-3.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226154955329-1703576996562-7-1703576999083-9-1703577001000-11.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226103453431.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226104059166-1703558460714-3.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226104059166-1703558460714-3.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226112657586-1703561218552-1.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120602829-1703563564434-5.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120738629.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120812264.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120835319.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120850536.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120903812.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120914615.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120923814.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201032348-1703592779165-11.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226200955986-1703592776556-9.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201222254-1703592773786-7.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201247056-1703592768504-5.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226221421434.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226224224883-1703601745900-13.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110609891-1703646372053-1.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110629383-1703646390663-3.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110842172-1703646523381-5.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110857333-1703646541323-7.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112229936.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112244530.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112840822.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227113558304.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115117644.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115815955.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115911299.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115921774.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227193225769.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227193334158.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227201323911.png">
+<meta property="og:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227201354011.png">
+<meta property="article:published_time" content="2023-12-31T02:25:00.000Z">
+<meta property="article:modified_time" content="2024-01-12T01:48:02.410Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226160659549.png">
+  
+    <link rel="alternate" href="/atom.xml" title="追着光梦游" type="application/atom+xml">
+  
+  
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-32.png" sizes="32x32">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-128.png" sizes="128x128">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-180.png" sizes="180x180">
+    <link rel="icon" media="(prefers-color-scheme: light)" href="/images/favicon-light-192.png" sizes="192x192">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-32.png" sizes="32x32">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-128.png" sizes="128x128">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-180.png" sizes="180x180">
+    <link rel="icon" media="(prefers-color-scheme: dark)" href="/images/favicon-dark-192.png" sizes="192x192">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body>
+  
+   
+  <div id="main-grid" class="  ">
+    <div id="nav" class=""  >
+      <navbar id="navbar">
+  <nav id="title-nav">
+    <a href="/">
+      <div id="vivia-logo">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div>追着光梦游 </div>
+    </a>
+  </nav>
+  <nav id="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    <a id="theme-btn" class="nav-icon">
+      <span class="light-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M438.5-829.913v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-829.913Zm0 747.826v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-82.087ZM877.913-438.5h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537t29.476-12.174h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T877.913-438.5Zm-747.826 0h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T82.087-521.5h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T130.087-438.5Zm660.174-290.87-34.239 32q-12.913 12.674-29.565 12.174-16.653-.5-29.327-13.174-12.674-12.673-12.554-28.826.12-16.152 12.794-28.826l33-35q12.913-12.674 30.454-12.674t30.163 12.847q12.709 12.846 12.328 30.826-.38 17.98-13.054 30.653ZM262.63-203.978l-32 34q-12.913 12.674-30.454 12.674t-30.163-12.847q-12.709-12.846-12.328-30.826.38-17.98 13.054-30.653l33.239-31q12.913-12.674 29.565-12.174 16.653.5 29.327 13.174 12.674 12.673 12.554 28.826-.12 16.152-12.794 28.826Zm466.74 33.239-32-33.239q-12.674-12.913-12.174-29.565.5-16.653 13.174-29.327 12.673-12.674 28.826-13.054 16.152-.38 28.826 12.294l35 33q12.674 12.913 12.674 30.454t-12.847 30.163q-12.846 12.709-30.826 12.328-17.98-.38-30.653-13.054ZM203.978-697.37l-34-33q-12.674-12.913-13.174-29.945-.5-17.033 12.174-29.707t31.326-13.293q18.653-.62 31.326 13.054l32 34.239q11.674 12.913 11.174 29.565-.5 16.653-13.174 29.327-12.673 12.674-28.826 12.554-16.152-.12-28.826-12.794ZM480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm-.247-82q65.703 0 111.475-46.272Q637-414.544 637-480.247t-45.525-111.228Q545.95-637 480.247-637t-111.475 45.525Q323-545.95 323-480.247t45.525 111.975Q414.05-322 479.753-322ZM481-481Z"/></svg></span>
+      <span class="dark-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.239-116.413q-152.63 0-258.228-105.478Q116.413-327.37 116.413-480q0-130.935 77.739-227.435t206.304-125.043q43.022-9.631 63.87 10.869t3.478 62.805q-8.891 22.043-14.315 44.463-5.424 22.42-5.424 46.689 0 91.694 64.326 155.879 64.325 64.186 156.218 64.186 24.369 0 46.978-4.946 22.609-4.945 44.413-14.076 42.826-17.369 62.967 1.142 20.142 18.511 10.511 61.054Q807.174-280 712.63-198.206q-94.543 81.793-232.391 81.793Zm0-95q79.783 0 143.337-40.217 63.554-40.218 95.793-108.283-15.608 4.044-31.097 5.326-15.49 1.283-31.859.805-123.706-4.066-210.777-90.539-87.071-86.473-91.614-212.092-.24-16.369.923-31.978 1.164-15.609 5.446-30.978-67.826 32.478-108.282 96.152Q211.652-559.543 211.652-480q0 111.929 78.329 190.258 78.329 78.329 190.258 78.329ZM466.13-465.891Z"/></svg></span>
+    </a>
+    
+      <a id="nav-rss-link" class="nav-icon mobile-hide" href="/atom.xml" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M198-120q-25.846 0-44.23-18.384-18.384-18.385-18.384-44.23 0-25.846 18.384-44.23 18.384-18.385 44.23-18.385 25.846 0 44.23 18.385 18.384 18.384 18.384 44.23 0 25.845-18.384 44.23Q223.846-120 198-120Zm538.385 0q-18.846 0-32.923-13.769-14.076-13.769-15.922-33.23-8.692-100.616-51.077-188.654-42.385-88.039-109.885-155.539-67.5-67.501-155.539-109.885Q283-663.462 182.385-672.154q-19.461-1.846-33.23-16.23-13.769-14.385-13.769-33.846t14.076-32.922q14.077-13.461 32.923-12.23 120.076 8.692 226.038 58.768 105.961 50.077 185.73 129.846 79.769 79.769 129.846 185.731 50.077 105.961 58.769 226.038 1.231 18.846-12.538 32.922Q756.461-120 736.385-120Zm-252 0q-18.231 0-32.423-13.461t-18.653-33.538Q418.155-264.23 348.886-333.5q-69.27-69.27-166.501-84.423-20.077-4.462-33.538-18.961-13.461-14.5-13.461-33.346 0-19.076 13.884-33.23 13.884-14.153 33.115-10.922 136.769 15.384 234.384 112.999 97.615 97.615 112.999 234.384 3.231 19.23-10.538 33.115Q505.461-120 484.385-120Z"/></svg>
+      </a>
+    
+    <div id="nav-menu-btn" class="nav-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M177.37-252.282q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Zm0-186.218q-17.453 0-29.477-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T177.37-521.5h605.26q17.453 0 29.477 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T782.63-438.5H177.37Zm0-186.217q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Z"/></svg>
+    </div>
+  </nav>
+</navbar>
+<div id="nav-dropdown" class="hidden">
+  <div id="dropdown-link-list">
+    
+      <a class="nav-dropdown-link" href="/">Home</a>
+    
+      <a class="nav-dropdown-link" href="/archives">Archives</a>
+    
+      <a class="nav-dropdown-link" href="/about">About</a>
+    
+    
+      <a class="nav-dropdown-link" href="/atom.xml" title="RSS Feed">RSS</a>
+     
+    </div>
+</div>
+<script>
+  let dropdownBtn = document.getElementById("nav-menu-btn");
+  let dropdownEle = document.getElementById("nav-dropdown");
+  dropdownBtn.onclick = function() {
+    dropdownEle.classList.toggle("hidden");
+  }
+</script>
+    </div>
+    <div id="sidebar-wrapper">
+      <sidebar id="sidebar">
+  
+    <div class="widget-wrap">
+  <div class="info-card">
+    <div class="avatar">
+      
+        <image src=/avater2.jpg></image>
+      
+      <div class="img-dim"></div>
+    </div>
+    <div class="info">
+      <div class="username">追着光梦游 </div>
+      <div class="dot"></div>
+      <div class="subtitle">研究生&网易音乐人 </div>
+      <div class="link-list">
+        
+          <a class="link-btn" href="wechat.jpg" title="WeChat"><i class="fa-brands fa-weixin"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://music.163.com/#/artist?id=33240593" title="Netease Cloud Music"><i class="fa-solid fa-music"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://github.com/star-child820" title="GitHub"><i class="fa-brands fa-github"></i></a>
+         
+      </div>  
+    </div>
+  </div>
+</div>
+
+  
+  <div class="sticky">
+    
+      
+
+
+
+    
+      
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">Archives</h3>
+      
+      
+        <a class="archive-link" href="/archives/2024/01 ">
+          January 2024 
+          <div class="archive-count">3 </div>
+        </a>
+      
+        <a class="archive-link" href="/archives/2023/12 ">
+          December 2023 
+          <div class="archive-count">1 </div>
+        </a>
+      
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">Recent Posts</h3>
+      <ul>
+        
+          <a class="recent-link" href="/2024/01/11/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91/" title="安卓逆向" >
+            <div class="recent-link-text">
+              安卓逆向
+            </div>
+          </a>
+        
+          <a class="recent-link" href="/2024/01/11/hello-world/" title="Hello World" >
+            <div class="recent-link-text">
+              Hello World
+            </div>
+          </a>
+        
+          <a class="recent-link" href="/2024/01/11/test/" title="test" >
+            <div class="recent-link-text">
+              test
+            </div>
+          </a>
+        
+          <a class="recent-link" href="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/" title="分布式系统速成" >
+            <div class="recent-link-text">
+              分布式系统速成
+            </div>
+          </a>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+  </div>
+</sidebar>
+    </div>
+    <div id="content-body">
+       
+
+
+<article id="post-分布式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+    
+   
+  <div class="article-inner">
+    <div class="article-main">
+      <header class="article-header">
+        
+<div class="main-title-bar">
+  <div class="main-title-dot"></div>
+  
+    
+      <h1 class="p-name article-title" itemprop="headline name">
+        分布式系统速成
+      </h1>
+    
+  
+</div>
+
+        <div class='meta-info-bar'>
+          <div class="meta-info">
+  <time class="dt-published" datetime="2023-12-31T02:25:00.000Z" itemprop="datePublished">2023-12-31</time>
+</div>
+          <div class="need-seperator meta-info">
+            <div class="meta-cate-flex">
+  
+    Uncategorized 
+   
+</div>
+  
+          </div>
+          <div class="wordcount need-seperator meta-info">
+            9.7k words 
+          </div>
+        </div>
+        
+      </header>
+      <div class="e-content article-entry" itemprop="articleBody">
+        
+          <h1 id="分布式系统速成"><a href="#分布式系统速成" class="headerlink" title="分布式系统速成"></a>分布式系统速成</h1><h2 id="复习要点"><a href="#复习要点" class="headerlink" title="复习要点"></a>复习要点</h2><p><strong>第一章 概述</strong></p>
+<p>分布式系统的定义、特征、分类、目标</p>
+<p><strong>第二章 体系结构</strong></p>
+<p>典型体系结构；中间件</p>
+<p><strong>第四章 通信</strong></p>
+<p>中间件通信协议；RPC原理及过程；多播通信</p>
+<p><strong>第五章 命名系统</strong></p>
+<p>非结构化命名：基于原籍的方法、分布式散列表法</p>
+<p>结构化命名：名字解析</p>
+<p><strong>第六章 同步化</strong></p>
+<p>物理时钟的实现与同步算法</p>
+<p>逻辑时钟同步：Lamport算法、向量时钟</p>
+<p>互斥算法：集中式、分布式、令牌环的比较</p>
+<p>选举算法：霸道算法、环算法</p>
+<p><strong>第七章 一致性与复制</strong></p>
+<p>以数据为中心的一致性：连续一致性、顺序一致性、因果一致性、线性一致性</p>
+<p>以客户为中心的一致性：单调读一致性、单调写一致性、读写一致性 </p>
+<p>一致性协议：合法数协议</p>
+<p><strong>第八章 容错性</strong></p>
+<p>失效的类型与模型</p>
+<p>故障系统的协定：拜占庭将军协定&#x2F;Lamport递归算法</p>
+<p>RPC失效的5中情况及解决方法</p>
+<p>组通信的可靠性：可靠多播、原子多播</p>
+<h2 id="简答题目录（部分）"><a href="#简答题目录（部分）" class="headerlink" title="简答题目录（部分）"></a>简答题目录（部分）</h2><table>
+<thead>
+<tr>
+<th>简答题关键词</th>
+<th>对应PPT的位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>透明性</td>
+<td>第一章p23</td>
+</tr>
+<tr>
+<td>开放性</td>
+<td>第一章p25</td>
+</tr>
+<tr>
+<td>可伸缩性</td>
+<td>第一章p27</td>
+</tr>
+<tr>
+<td>层次性体系结构</td>
+<td>第二章p7</td>
+</tr>
+<tr>
+<td>系统体系结构</td>
+<td>第二章p20</td>
+</tr>
+<tr>
+<td>P2P技术</td>
+<td>第二章p25</td>
+</tr>
+<tr>
+<td>中间件协议</td>
+<td>第四章p13</td>
+</tr>
+<tr>
+<td>RPC执行的主要步骤</td>
+<td>第四章p24</td>
+</tr>
+<tr>
+<td>实体定位方法-广播、多播和指针</td>
+<td>第五章</td>
+</tr>
+<tr>
+<td>一致性模型</td>
+<td>第七章p11</td>
+</tr>
+<tr>
+<td>推送式与拉取式协议</td>
+<td>第七章p63</td>
+</tr>
+<tr>
+<td>RPC失效</td>
+<td>第八章p27</td>
+</tr>
+<tr>
+<td>可靠多播</td>
+<td>第八章p35</td>
+</tr>
+<tr>
+<td>原子性多播</td>
+<td>第八章p39</td>
+</tr>
+<tr>
+<td>分布式提交</td>
+<td>第八章p48</td>
+</tr>
+<tr>
+<td>恢复处理</td>
+<td>第八章p52</td>
+</tr>
+</tbody></table>
+<h2 id="第二章-分布式体系结构"><a href="#第二章-分布式体系结构" class="headerlink" title="第二章 分布式体系结构"></a>第二章 分布式体系结构</h2><h3 id="CAN系统"><a href="#CAN系统" class="headerlink" title="CAN系统"></a>CAN系统</h3><blockquote>
+<p>就是求两点之间的路径最短，选择最短的路径即可</p>
+</blockquote>
+<h4 id="系统原理"><a href="#系统原理" class="headerlink" title="系统原理"></a>系统原理</h4><ol>
+<li>将$(key, value) $对存储在拥有该点所在区域的结点内</li>
+<li>将请求传给<strong>当前结点</strong>四邻中距离最<strong>接近目标点的结点</strong>(&#x3D;&#x3D;注意是算到目标点的距离&#x3D;&#x3D;)</li>
+<li>时间复杂性$O(n&#x2F;d) $ $d $为系统维数</li>
+<li>每结点维护的路由表信息和网络规模无关为$O(d) $</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226160659549.png" alt="image-20231226160659549" style="zoom:50%;">
+
+<h4 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h4><p>在如下的CAN网络种，试解释如何把（0.2,0.8）的结点消息路由到坐标为（0.7,0.2）的结点？</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226161848867.png" alt="image-20231226161848867" style="zoom:80%;">
+
+<p>解：</p>
+<p>路由策略是假设知道其紧邻结点的坐标, 把消息路由给距离目的地最近的结点。</p>
+<p>终止点（0.7,0.2），分别计算起始点的邻结点（0.7,0.7）和（0.2,0.4）到终止点的欧几里得距离：</p>
+<p>（0.7,0.7）–&gt;（0.7,0.2）：$\sqrt{(0.7-0.7)^2+(0.7-0.2)^2}$ </p>
+<p>（0.2,0.4）–&gt;（0.7,0.2）：$\sqrt{(0.2-0.7)^2+(0.4-0.2)^2}$ </p>
+<p>得知（0.7,0.7）–&gt;（0.7,0.2）的距离更短，因此路径选择（0.2,0.8）–&gt;（0.7,0.7）–&gt;（0.7,0.2）</p>
+<h3 id="call-by-reference和copy-restore"><a href="#call-by-reference和copy-restore" class="headerlink" title="call-by-reference和copy&#x2F;restore"></a>call-by-reference和copy&#x2F;restore</h3><h4 id="例题-1"><a href="#例题-1" class="headerlink" title="例题"></a>例题</h4><p>过程<code>function</code>有两个整形参数，其过程对每一个参数进行平方运算。假设在调用function时使用同一个变量，如<code>function(int i ,int i)</code>。若i的初值为2，如果按call-by-reference方式调用，i的结果是多少？如果按copy&#x2F;restore方式调用，i的结果又是多少？试简要分析说明.</p>
+<p>解:</p>
+<p>call-by-reference方式调用时,x的结果为16.<br>该调用中,参数仅仅相当于初始化的局部变量,调用中x&#x3D;2进行一次function运算得到4,其调用地址入栈进行一次计算,得到结果16,返回结果.</p>
+<p>copy&#x2F;restore方式调用,x的结果为4<br>调用过程:将变量x&#x3D;2复制到堆栈中,执行function后得到堆栈中的变量赋值回去,即为4.并覆盖调用方法中原来的值.</p>
+<h2 id="第四章-分布式通信管理"><a href="#第四章-分布式通信管理" class="headerlink" title="第四章 分布式通信管理"></a>第四章 分布式通信管理</h2><h3 id="CBCAST-协议（时间戳向量）"><a href="#CBCAST-协议（时间戳向量）" class="headerlink" title="CBCAST 协议（时间戳向量）"></a>CBCAST 协议（时间戳向量）</h3><h4 id="时间戳向量、发送者和接收者"><a href="#时间戳向量、发送者和接收者" class="headerlink" title="时间戳向量、发送者和接收者"></a>时间戳向量、发送者和接收者</h4><p><strong>时间戳向量</strong>：设组内有n个进程，每个进程设置一个n元向量 $V[n] &#x3D;{V[1]，V[2],…,V[n]} $</p>
+<p><strong>发送者</strong>：修改向量：$V[j]&#x3D;V[j]+1 $ ; (第j个进程）</p>
+<p><strong>接收者</strong>：</p>
+<ul>
+<li><p>接收条件:  (1) $L[j]&#x3D;V[j]-1 $;  (2) $L[i] &gt;&#x3D;V[i] (i!&#x3D;j) $</p>
+</li>
+<li><p>修改向量：$L[j] &#x3D; V[j] $ 如果可以接收</p>
+</li>
+</ul>
+<p>其中， $V_i $是发送方向量种的第 $ i$ 位， $ L_i$是接收方向量中的第位，假设消息由进程 $ j$ 发送。</p>
+<h4 id="例题-2"><a href="#例题-2" class="headerlink" title="例题"></a>例题</h4><p>对于下列表格表示的进程，由进程 1 向其他的进程发送消息，此时刻，哪些进程需要等待，哪些进⾏可以接收消息。</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226115217329-1703562738586-3.png" alt="image-20231226115217329" style="zoom: 50%;">
+
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226154955329-1703576996562-7-1703576999083-9-1703577001000-11.png" alt="image-20231226154955329" style="zoom: 67%;">
+
+<h2 id="第五章-分布式命名管理"><a href="#第五章-分布式命名管理" class="headerlink" title="第五章 分布式命名管理"></a>第五章 分布式命名管理</h2><h3 id="DHT算法"><a href="#DHT算法" class="headerlink" title="DHT算法"></a>DHT算法</h3><h4 id="结点和键值"><a href="#结点和键值" class="headerlink" title="结点和键值"></a>结点和键值</h4><p>首先看他有几个结点，这里是五个结点，分别为<em>1,4,7,12,15</em>。其中所有的非结点的后继都是顺时针的下一个结点，即<em>2,3</em>对应的后继是<em>4</em>，<em>5,6</em>对应的后继是<em>7</em>。</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226103453431.png" alt="image-20231226103453431" style="zoom: 67%;">
+
+<h4 id="指状表"><a href="#指状表" class="headerlink" title="指状表"></a>指状表</h4><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226104059166-1703558460714-3.png" alt="image-20231226104059166" style="zoom: 67%;">
+
+<p>一个公式秒了：$value&#x3D;(n+2^{i-1} )mod(2^m) $</p>
+<p>其中<em>n</em>是当前结点的值，<em>i</em>是表中的第几项，<em>m</em>是指状表的大小。注意计算出来<em>value</em>以后他的值应该是后继（如果计算出来<em>value</em>是<em>0</em>，那么他的后继的结点是<em>1</em>，所以表中应该填<em>1</em>）。</p>
+<h4 id="从结点28解析键值12"><a href="#从结点28解析键值12" class="headerlink" title="从结点28解析键值12"></a>从结点28解析键值12</h4><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226104059166-1703558460714-3.png" alt="image-20231226104059166" style="zoom: 67%;">
+
+<p>从28开始查找指状表，找距离12最近的但是不超过12的结点跳转（跳到4），然后从4继续开始查找9，以此类推一直找到第一个超过12的结点为止（即最后找到14）。 </p>
+<h2 id="第六章-分布式同步控制"><a href="#第六章-分布式同步控制" class="headerlink" title="第六章 分布式同步控制"></a>第六章 分布式同步控制</h2><h3 id="Lamport算法"><a href="#Lamport算法" class="headerlink" title="Lamport算法"></a>Lamport算法</h3><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226112657586-1703561218552-1.png" alt="image-20231226112657586" style="zoom: 80%;">
+
+<p>图a和图b说明：</p>
+<ol>
+<li>图a和图b都有3个进程；</li>
+<li>图a说明了使用物理时钟得到的时间分配；</li>
+<li>图b说明了使用Lamport逻辑时钟得到的时间分配。</li>
+</ol>
+<h4 id="图a-物理时钟"><a href="#图a-物理时钟" class="headerlink" title="图a-物理时钟"></a>图a-物理时钟</h4><p>图a中的三个进程0、1和2各自运行在不同的计算机上，每台计算机都有自己的时钟，每台物理时钟都以不同的速率工作从而得到了不同的时间。</p>
+<p>在时刻6,进程0将消息A发送给进程1，当A消息到达进程1时，进程1的时时钟值是16；进程0发送消息A和进程1发送消息B的发送时间及时钟值都还在合理的时钟值范围内；但是在进程2发送C到进程1并达到进程1的时钟值就出现了问题，因为消息发送的时刻应该小于消息达到的时刻，而Lamport逻辑时钟就解决了这个问题（看图b）。</p>
+<h4 id="图b-Lamport逻辑时钟"><a href="#图b-Lamport逻辑时钟" class="headerlink" title="图b-Lamport逻辑时钟"></a>图b-Lamport逻辑时钟</h4><p>Lamport逻辑时钟就是让事件遵循happen-before关系。因为消息C在时刻60离开进程2，那么消息C到达进程1的时刻应该在61时刻或者更晚。所以每个消息应该根据发送者时钟的发送时间来调整自己的时钟值。图b中进程1在收到C消息后发现自己的时钟小于C消息的时钟，进程1根据消息C的时钟调整了自己的时钟为61,进程0也做了同样的时钟值调整。 注意为什么D的起始是69，因为进程1的局部时钟是8，所以由于他之前的时钟改变（56-&gt;61），他后续的时钟都要改变（即以8为步长增加），所以D的起始是69，终点就是69+1&#x3D;70。</p>
+<h3 id="Bully算法"><a href="#Bully算法" class="headerlink" title="Bully算法"></a>Bully算法</h3><blockquote>
+<p>特别简单</p>
+</blockquote>
+<h4 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h4><p>将进程进行排序；</p>
+<ol>
+<li>P向号码高的进程发E消息</li>
+<li>如果没有响应，P选举获胜</li>
+<li>如果有进程Q响应,则P结束，Q接管选举并继续下去。</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120602829-1703563564434-5.png" alt="image-20231226120602829" style="zoom: 150%;">
+
+<h4 id="例题-3"><a href="#例题-3" class="headerlink" title="例题"></a>例题</h4><p>由0到7号共计8个进程组成一个进程组，7号进程作为协作者。简述3号进程发现7号进程崩溃后，按照Bully算法选举新协作进程。</p>
+<ol>
+<li>有3号进程主持选举，向4，5，6，7号进程发消息</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120738629.png" alt="image-20231226120738629" style="zoom:150%;">
+
+<ol start="2">
+<li><p>4，5，6号进程应答，通知3号进程停止</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120812264.png" alt="image-20231226120812264" style="zoom:150%;">
+</li>
+<li><p>进程4主持选举</p>
+</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120835319.png" alt="image-20231226120835319" style="zoom:150%;">
+
+<ol start="4">
+<li>进程5，6应答，通知进程4停止</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120850536.png" alt="image-20231226120850536" style="zoom:150%;">
+
+<ol start="5">
+<li>进程5，6主持选举</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120903812.png" alt="image-20231226120903812" style="zoom:150%;">
+
+<ol start="6">
+<li>进程6应答，通知进程5停止</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120914615.png" alt="image-20231226120914615" style="zoom:150%;">
+
+<ol start="7">
+<li>进程6获胜，并通知所有进程</li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226120923814.png" alt="image-20231226120923814" style="zoom:150%;">
+
+<h3 id="无线网络系统的选举算法"><a href="#无线网络系统的选举算法" class="headerlink" title="无线网络系统的选举算法"></a>无线网络系统的选举算法</h3><h4 id="算法过程-1"><a href="#算法过程-1" class="headerlink" title="算法过程"></a>算法过程</h4><p>所有进程按逻辑或物理次序排序，形成一个环</p>
+<ol>
+<li><p>当一个进程P发现协调者C失效后，向后续进程发送E消息</p>
+</li>
+<li><p>每个进程继续向后传递E消息，直到返回P</p>
+</li>
+<li><p>P再将新确定的协调者C传给所有进程</p>
+</li>
+</ol>
+<h4 id="例题-4"><a href="#例题-4" class="headerlink" title="例题"></a>例题</h4><p>下面为10个结点构成的无线网络，a为源结点，结点中的数字表示结点的通信能力，可以从a发起一次选举，找出通信能力最强的结点，试描述相应的过程。</p>
+<ol>
+<li><strong>发起者，提出选举</strong></li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201032348-1703592779165-11.png" alt="image-20231226201032348" style="zoom:50%;">
+
+<ol start="2">
+<li><strong>向邻居节点扩展，形成一个生成树</strong></li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226200955986-1703592776556-9.png" alt="image-20231226200955986" style="zoom:50%;">
+
+<ol start="3">
+<li><strong>沿生成树向父节点返回 $[i,c_{max}] $ ，$c_{max} $ 为最大值</strong></li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201222254-1703592773786-7.png" alt="image-20231226201222254" style="zoom:50%;">
+
+<ol start="4">
+<li><strong>发起者，向其余节点发布协调者</strong></li>
+</ol>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226201247056-1703592768504-5.png" alt="image-20231226201247056" style="zoom:50%;">
+
+<h2 id="第七章-分布式一致性"><a href="#第七章-分布式一致性" class="headerlink" title="第七章 分布式一致性"></a>第七章 分布式一致性</h2><h3 id="持续一致性"><a href="#持续一致性" class="headerlink" title="持续一致性"></a>持续一致性</h3><p>持续一致性定义了不一致性的三个独立坐标轴：数值偏差、顺序偏差、新旧偏差（不一致性的三个衡量标准），这些偏差构成了持续一致性的范围。</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226221421434.png" alt="image-20231226221421434" style="zoom:50%;">
+
+<ul>
+<li><p><strong>向量时钟</strong></p>
+<p>简而言之，就是互相去找对方持久化操作的位置，和自己最后操作的时间戳</p>
+<p>副本A中有B持久化操作的时间戳5，自己最后操作的时间戳是10，因此A的向量时钟$$A&#x3D;(11,5)$$</p>
+<p>副本B中没有A持久化操作，因此就是0，自己最后操作的时间戳是7，因此B的向量时钟$$B&#x3D;(0,8)$$（&#x3D;&#x3D;注意他俩的位置不一样&#x3D;&#x3D;）</p>
+</li>
+<li><p><strong>顺序偏差</strong></p>
+<p>就是去找自己没有持久化操作的个数</p>
+<p>副本A的非持久化操作有3个，因此A的顺序偏差是3</p>
+<p>副本B的非持久化操作有1个，因此B的顺序偏差是1</p>
+</li>
+<li><p><strong>数值偏差</strong></p>
+<p>数值偏差的形式是$(a,b)$，其中$a$代表着当前副本还没收到对方副本的操作的数量，$b$代表的意思是，自己没收到的那些操作带来的数值变化是多少（其实很简单，看下面的例子）</p>
+<p>对于副本A来说，它还未收到副本B的另外两个操作，因此副本A的$a$是2。下面我们看$b$：副本A只收到了副本B的$&lt;5,B&gt;$的操作，剩下的$&lt;6,B&gt;$，$&lt;7,B&gt;$都没收到，就看这两个操作带来了多少数值变化！$&lt;6,B&gt;$操作是使 $p+70$，下面的操作是使 $d+412$，因此带来的数值变化就是$70+412&#x3D;482$！因此副本A的数值偏差是$(2,482)$</p>
+<p>同理，对于副本B来说，它没收到副本A的三个操作，因此$a&#x3D;3$；然后看没收到的操作带来的数值变化，即：$50+78+558&#x3D;686$。因此副本B的数值偏差是$(3,686)$</p>
+</li>
+</ul>
+<p>下方的例题可以检验一下自己是否理清其逻辑：</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231226224224883-1703601745900-13.png" alt="image-20231226224224883" style="zoom:50%;">
+
+<h3 id="一致性单元的粒度选择"><a href="#一致性单元的粒度选择" class="headerlink" title="一致性单元的粒度选择"></a>一致性单元的粒度选择</h3><p>粗粒度：任一个更新操作都导致更新传播</p>
+<p>细粒度：当一个数据更新时，另一个数据无需更新</p>
+<h3 id="严格一致性"><a href="#严格一致性" class="headerlink" title="严格一致性"></a>严格一致性</h3><p><strong>规则</strong>： 对数据项x的读操作返回的值为最近写入x的值</p>
+<p>例如：$p1$写入$X&#x3D;1$，那么$p2$在其后执行就只能读$X&#x3D;1$</p>
+<p><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110609891-1703646372053-1.png" alt="image-20231227110609891" style="zoom: 50%;"><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110629383-1703646390663-3.png" alt="image-20231227110629383" style="zoom: 50%;"></p>
+<h3 id="顺序一致性"><a href="#顺序一致性" class="headerlink" title="顺序一致性"></a>顺序一致性</h3><p><strong>规则</strong>：所有进程执行的结果，等同于它们的操作按某种顺序在<strong>数据仓</strong>上执行的结果。每个进程的操作都按照程序规定的顺序。<strong>所有进程看到相同的内存访问操作次序</strong>，等价于数据库的可串行化。</p>
+<p>例如：</p>
+<p><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110842172-1703646523381-5.png" alt="image-20231227110842172" style="zoom: 33%;"><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227110857333-1703646541323-7.png" alt="image-20231227110857333" style="zoom: 33%;"></p>
+<p>这里说明一下为什么第二个例子是非顺序一致性的：我们可以把他们的操作顺序合并在一起（x&#x3D;1和x&#x3D;2拆开），找到一个满足规则的顺序即可。其一如下所示：$H&#x3D;{W_1(x)1,R_3(x)2,R_3(x)1,R_4(x)1,W_2(x)2,R_4(x)2} $</p>
+<p>注意合并的时候，每个进程他们内部的相对顺序是不能变的，比如这里$p3$的顺序 $E_3&#x3D;{R_3(x)2,R_3(x)1} $ 必须要保持他们的先后。此时会发现不管我们怎么写合并的操作，始终不能把他们拆分成 $(x)1,(x)2 $ 单独在一起的情况。</p>
+<p>而对于第一个例子来说，我们可以写出其一个合法历程：$H&#x3D;{W_1(x)1,R_3(x)1,R_4(x)1,W_2(x)2,R_3(x)2,R_4(x)2} $，此时是满足顺序一致性滴~</p>
+<p>这里是关于顺序一致性的形式化描述：</p>
+<p><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112229936.png" alt="image-20231227112229936" style="zoom:50%;"><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112244530.png" alt="image-20231227112244530" style="zoom:50%;"></p>
+<h3 id="因果一致性"><a href="#因果一致性" class="headerlink" title="因果一致性"></a>因果一致性</h3><p>首先我们先介绍一下什么是因果关系：$p_1$写$x$，$p_2$读$x$，然后写$y$，则$W_2(y)$与$W_1(x)$具有<strong>潜在的因果关系</strong>。否则，操作之间的关系为并发(<em>Concurrent</em>)关系</p>
+<p><strong>定义</strong>：</p>
+<ul>
+<li>对于具有潜在因果关系的写操作，所有进程看到的执行顺序应相同；</li>
+<li>并发写操作在不同主机上被看到的顺序可以不同。</li>
+</ul>
+<p>这里有个例子：</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227112840822.png" alt="image-20231227112840822" style="zoom:50%;">
+
+<p>首先根据因果关系的定义我们可以知道$W_1(x)1$和$W_2(x)2$是存在潜在的因果关系的，那么我们就可以断定，其他程序在读$x$的时候，一定也是按照这个因果关系的次序来读的，也就是先读$x&#x3D;1$，再读$x&#x3D;2$。</p>
+<p>那么看符合因果一致性的例子，这里$p3$，$p4$都是符合我们说的这种次序关系的。</p>
+<p>但是看违反因果一致性的例子，这里对于$p3$来说，它先读了$x&#x3D;2$，又读了$x&#x3D;1$，违反了我们的定义。</p>
+<h3 id="FIFO一致性"><a href="#FIFO一致性" class="headerlink" title="FIFO一致性"></a>FIFO一致性</h3><p><strong>规则</strong>：同一个进程的写操作的执行次序，其它进程看到的都相同。不同进程的写操作的执行次序，不同进程看到的可以是不同的。</p>
+<p>下面是个例子：</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227113558304.png" alt="image-20231227113558304" style="zoom: 80%;">
+
+<p>首先为什么是符合FIFO一致性：因为对于$P2$来说，它先执行了$W(x)2$，后执行了$W(x)3$，对于其他进程来说，如果要读，也要按照这个次序来读，可以发现$p3$和$p4$都是符合的。</p>
+<p>这里我们再说一下为什么是不符合因果一致性：对于$p1$和$p2$来说，其中的$W(x)1$和$W(x)2$是存在潜在因果关系的，但是对于$p3$来说，他违反了我们上一小节的定义。</p>
+<h3 id="释放一致性"><a href="#释放一致性" class="headerlink" title="释放一致性"></a>释放一致性</h3><ul>
+<li>被保护数据：需要保持一致的共享数据</li>
+<li><code>Acquire(L)</code>操作：进入临界区<ul>
+<li>导入数据：使被保护数据的局部拷贝与远程的最新版本一致</li>
+</ul>
+</li>
+<li><code>Release(L)</code>操作：退出临界区<ul>
+<li>导出数据：将被保护数据上的变化传播到其它的局部拷贝上</li>
+</ul>
+</li>
+</ul>
+<p><strong>规则</strong>：</p>
+<ul>
+<li>在访问共享数据前，所有先前的<code>acquire</code>操作都必须完成。</li>
+<li>在执行<code>release</code>前，先前的所有读写操作都必须完成。</li>
+<li>对同步变量的访问必须满足FIFO一致性</li>
+</ul>
+<p>这个很简单，按照规则来看就行，下面是个例子。</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115117644.png" alt="image-20231227115117644" style="zoom: 80%;">
+
+<p>这里还有一些其他情况（感觉了解即可）：</p>
+<p>**及时释放一致性(EAGER release)**：当执行了释放操作，执行此操作的处理机将所有修改的数据传给所有那些已经有其缓冲拷贝且可能需要它的处理机。</p>
+<p><strong>滞后释放一致性（LAZY release ）</strong>：在执行释放时，不发送任何数据；在执行获取操作时，处理机试图从拥有这些变量的机器上取得它们的最新值。</p>
+<h3 id="入口项一致性"><a href="#入口项一致性" class="headerlink" title="入口项一致性"></a>入口项一致性</h3><p><strong>同步变量</strong></p>
+<ul>
+<li>与某个共享数据项相关联。<ul>
+<li>不是与数据区中的所有保护型数据关联</li>
+</ul>
+</li>
+<li>拥有者(<em>owner</em>)：最后一个获取（<em>acquire</em>）它的进程。<ul>
+<li>其他进程必须从当前所有者手中取得拥有权</li>
+</ul>
+</li>
+<li>非互斥方式（<em>non-exclusive</em>）:可以读，但不能写。<ul>
+<li>多个进程可以非互斥方式同时拥有一个同步变量</li>
+</ul>
+</li>
+</ul>
+<p><strong>规则</strong>：</p>
+<ol>
+<li>在进程$P$获取同步变量$S$之前，有关的被保护的共享数据上的全部更新操作都必须完成；</li>
+<li>在进程$P$以互斥模式访问同步变量$S$之前，不允许其他进程同时拥有$S$，即使在非互斥模式下；</li>
+<li>在进程$P$以互斥模式获取同步变量$S$之后，任意其他进程都不能对$S$执行非互斥式访问，除非在$S$的拥有者$P$执行之后。</li>
+</ol>
+<p>例子：（这个不会0.0）</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115815955.png" alt="image-20231227115815955" style="zoom: 67%;">
+
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115911299.png" alt="image-20231227115911299" style="zoom:80%;">
+
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227115921774.png" alt="image-20231227115921774" style="zoom:80%;">
+
+<h3 id="基于多数表决的复制写协议"><a href="#基于多数表决的复制写协议" class="headerlink" title="基于多数表决的复制写协议"></a>基于多数表决的复制写协议</h3><p>与主副本协议的区别：多个副本同时执行写操作</p>
+<p>基本算法：</p>
+<ul>
+<li><p>设有$N$个副本</p>
+</li>
+<li><p>设置读合法数$N_R$，写合法数$N_W$</p>
+</li>
+<li><p>要求：$N_R + N_W&gt; N$； $N_W&gt; N&#x2F;2$</p>
+</li>
+</ul>
+<h4 id="例题-5"><a href="#例题-5" class="headerlink" title="例题"></a>例题</h4><p>试简要描述基于多数表决的协议。当一个文件被复制在4个服务器上，请列出表决算法允许的所有读团体和写团体。</p>
+<p>解：</p>
+<p>基于多数表决的协议：其基本思想是要求客户在读或写一个复制的数据项之前向多个服务器提出请求，并获得他们的许可。它与主副本协议的区别在于它可以以多个副本同时执行写操作，该算法要求读团体和写团体满足：</p>
+<p>$N_R + N_W&gt; N$； $N_W&gt; N&#x2F;2$</p>
+<p>故可以有（2,3）（1,4）两种允许的读团体和写团体。一种是读团体至少有2个服务器，写团体至少有3个服务器；另一种是读团体至少有1个服务器，写团体至少有4个服务器。</p>
+<h2 id="第八章-分布式容错性"><a href="#第八章-分布式容错性" class="headerlink" title="第八章 分布式容错性"></a>第八章 分布式容错性</h2><h3 id="拜占庭将军协定（Lamport递归算法）"><a href="#拜占庭将军协定（Lamport递归算法）" class="headerlink" title="拜占庭将军协定（Lamport递归算法）"></a>拜占庭将军协定（Lamport递归算法）</h3><p><strong>拜占庭将军协定问题</strong></p>
+<p>假设通信是可靠的，但进程可能是不可靠的</p>
+<p>例：3个忠诚将军，1个叛变将军</p>
+<h4 id="Lamport递归算法"><a href="#Lamport递归算法" class="headerlink" title="Lamport递归算法"></a><strong>Lamport递归算法</strong></h4><p>假设有五个节点，其中一个发生了拜占庭故障，使用Lamport递归算法来找到这个错误点。</p>
+<p>解：</p>
+<p>5个节点，其中1个节点错误，使用Lamport算法寻找错误节点，<strong>假设</strong>1号节点错误，Lamport算法共有4步。</p>
+<ol>
+<li>正确节点发送真实信息，错误节点发送错误信息</li>
+</ol>
+<ul>
+<li>节点1发送给别人的数据：x, y, z, w → 错误节点，错误信息</li>
+<li>节点2发送给别人的数据：2 →真实信息</li>
+<li>节点3发送给别人的数据：3 →真实信息</li>
+<li>节点4发送给别人的数据：4 →真实信息</li>
+<li>节点5发送给别人的数据：5 →真实信息</li>
+</ul>
+<ol start="2">
+<li>把第一步声明的结构组成向量形式：</li>
+</ol>
+<ul>
+<li>节点1：$Got&#x3D;(1, 2, 3, 4, 5) $</li>
+<li>节点2：$Got&#x3D;(x, 2, 3, 4, 5) $</li>
+<li>节点3：$Got&#x3D;(y, 2, 3, 4, 5) $</li>
+<li>节点4：$Got&#x3D;(z, 2, 3, 4, 5) $</li>
+<li>节点5：$Got&#x3D;(w, 2, 3, 4, 5) $</li>
+</ul>
+<ol start="3">
+<li>每个节点将第2步中的向量传递给其他节点，其中错误节点继续发送错误信息（用a,b,c…表示）</li>
+</ol>
+<ul>
+<li>节点1：$ Got&#x3D;\left[\begin{array}{lllll}1 &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ x &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ y &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ z &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ w &amp; 2 &amp; 3 &amp; 4 &amp; 5\end{array}\right]$</li>
+<li>节点2：$Got &#x3D;\left[\begin{array}{ccccc}a &amp; b &amp; c &amp; d &amp; e \ x &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ y &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ z &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ w &amp; 2 &amp; 3 &amp; 4 &amp; 5\end{array}\right]$</li>
+<li>节点3：$Got &#x3D;\left[\begin{array}{ccccc}f &amp; g &amp; h &amp; i &amp; j \ x &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ y &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ z &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ w &amp; 2 &amp; 3 &amp; 4 &amp; 5\end{array}\right]$</li>
+<li>节点4：$Got &#x3D;\left[\begin{array}{}k &amp; l &amp; m &amp; n &amp; o \ x &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ y &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ z &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ w &amp; 2 &amp; 3 &amp; 4 &amp; 5\end{array}\right]$</li>
+<li>节点5：$Got &#x3D;\left[\begin{array}{}p &amp; q &amp; r &amp; s &amp; t \ x &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ y &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ z &amp; 2 &amp; 3 &amp; 4 &amp; 5 \ w &amp; 2 &amp; 3 &amp; 4 &amp; 5\end{array}\right]$</li>
+</ul>
+<ol start="4">
+<li>每个节点检查接收向量，把某个值占多数的，放入向量中，生成结果向量</li>
+</ol>
+<ul>
+<li>节点1： $Got(unknown, 2, 3, 4, 5) $</li>
+<li>节点2： $Got(unknown, 2, 3, 4, 5) $</li>
+<li>节点3： $Got(unknown, 2, 3, 4, 5) $</li>
+<li>节点4： $Got(unknown, 2, 3, 4, 5) $</li>
+<li>节点5： $Got(unknown, 2, 3, 4, 5) $</li>
+</ul>
+<p>综上，判断出1号节点出现错误，结果向量：$[unknown, 2, 3, 4, 5] $</p>
+<blockquote>
+<p>归根结底就是错误节点每次转发的时候都转发不同的错误值，连续两次大家就知道是谁出错了</p>
+</blockquote>
+<p>&#x3D;&#x3D;注意：若要有m个进程出错的系统实现协同一致，最少要有$2m+1$个正常进程。进程总数为$3m+1$。需超过2&#x2F;3多数，才能达成协定！&#x3D;&#x3D;</p>
+<h3 id="三模冗余方法"><a href="#三模冗余方法" class="headerlink" title="三模冗余方法"></a>三模冗余方法</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>三路表决器(<em>voter</em>)：三路输入，一路输出</p>
+<p>可屏蔽一路错误（任意性失效）</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227193225769.png" alt="image-20231227193225769" style="zoom:67%;">
+
+<h4 id="例题-6"><a href="#例题-6" class="headerlink" title="例题"></a>例题</h4><p>对于以下三模冗余系统，说明可屏蔽掉的最坏情况（最多个数的元件损坏）。</p>
+<p>(1) 如果元件（设备和表决器）的故障类型是fail-stop故障。</p>
+<p>(2) 如果元件（设备和表决器）的故障类型是拜占庭故障。</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227193334158.png" alt="image-20231227193334158" style="zoom: 33%;">
+
+<p>&#x3D;&#x3D;答案不一定正确！&#x3D;&#x3D;</p>
+<p>解：</p>
+<p>（1）Fail-Stop故障是指，成员在发生故障后会停止运行。</p>
+<p>根据上述描述，只要每组有一个正常运行就可以了，所以可以屏蔽掉的最坏情况应该是6个</p>
+<p>（2）以下是CSDN某博主回答：</p>
+<p>三模冗余是使用物理冗余来提供容错的技术，是使用主动复制方法的容错。在电子电路中有设备A、B、C，然后每个设备复制三次，结果就是每级电路都设置了三个表决器，每个表决器有三个输入和一个输出，若两个或者三个输出相同，输出则等于输入，若三个输入各不相同，输出就是不定值，这种设计就是TMR。<br>若处理机是Byzabtine类型的，出错的处理机仍然工作并发出错误的随机的应答，那么至少需要2K+1个处理机才能达到K级容错。最坏情况下K个失效的处理机偶然（甚至有意）地产生相同的应答，然而剩下的K+1个未出错的处理机也将产生相同的应答，因此客户机可以根据大多数的应答得到正确结果。</p>
+<p>三模冗余在每组中有一个部件出现Byzabtine故障时可以处理，而一组中有两个甚至三个同时出现Byzabtine故障时则不能处理。</p>
+<blockquote>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42613756/article/details/110927325">https://blog.csdn.net/qq_42613756/article/details/110927325</a></p>
+</blockquote>
+<p>根据上述回答，这样如果是拜占庭故障的话，最多可以有三个元件损坏。                                                      </p>
+<h3 id="原子性多播"><a href="#原子性多播" class="headerlink" title="原子性多播"></a>原子性多播</h3><p>规则：</p>
+<ul>
+<li>消息要么递交给所有组员，要么一个也不递交</li>
+<li>对于每个组员，所有消息的递交次序是相同的</li>
+</ul>
+<h4 id="可靠的无序多播"><a href="#可靠的无序多播" class="headerlink" title="可靠的无序多播"></a>可靠的无序多播</h4><p>不保证接收到消息的递交次序是相同的</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227201323911.png" alt="image-20231227201323911" style="zoom:50%;">
+
+<h4 id="可靠的FIFO次序多播"><a href="#可靠的FIFO次序多播" class="headerlink" title="可靠的FIFO次序多播"></a>可靠的FIFO次序多播</h4><p>从同一发送者接收到的消息的递交次序与发送次序一致</p>
+<p>举例：发送者$p1$和$p4$，接收者$p2$和$p3$</p>
+<img src="/2023/12/31/%E5%88%86%E5%B8%83%E5%BC%8F/image-20231227201354011.png" alt="image-20231227201354011" style="zoom:50%;">
+
+<h4 id="可靠的因果次序多播"><a href="#可靠的因果次序多播" class="headerlink" title="可靠的因果次序多播"></a>可靠的因果次序多播</h4><blockquote>
+<p>不太懂</p>
+</blockquote>
+<p>具有因果关系的消息的递交次序与发送次序一致，无论消息是否由同一发送者发送的。</p>
+<p>可使用时间戳向量实现。</p>
+<h4 id="例题-7"><a href="#例题-7" class="headerlink" title="例题"></a>例题</h4><ol>
+<li>对于以下多播通信：</li>
+</ol>
+<p>（1） 指出多播的次序</p>
+<p>（2）将其修改为全序多播</p>
+<table>
+<thead>
+<tr>
+<th>Process P1</th>
+<th>Process P2</th>
+<th>Process P3</th>
+<th>Process P4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sends m1</td>
+<td>receives m1</td>
+<td>receives m3</td>
+<td>sends m3</td>
+</tr>
+<tr>
+<td>sends m2</td>
+<td>receives m3</td>
+<td>receives m1</td>
+<td>sends m4</td>
+</tr>
+<tr>
+<td></td>
+<td>receives m2</td>
+<td>receives m2</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>receives m4</td>
+<td>receives m4</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>解：</p>
+<p>（1）其实根据上面的样例，很容易发现这就是<strong>可靠的FIFO次序多播</strong>，因为从同一发送者接收到的消息的递交次序与发送次序是一致的。</p>
+<p>（2）其让修改为全序多播，这里我找了一下全序多播的定义：</p>
+<p>全序多播(<em>totally ordered multicast</em>)即一次将所有的消息以<strong>同样的顺序</strong>传送给每个接收者的多播操作。</p>
+<ul>
+<li>进程收到一个消息后，将其放入一个本地队列中，并根据其<strong>时间戳进行排序</strong></li>
+<li>接收者向其他所有进程广播<strong>确认</strong></li>
+<li>只有队列中一个消息处于<strong>队列头</strong>，且被其他<strong>所有进程确认</strong>时，进程才可以将其传送给运行中的应用程序</li>
+</ul>
+<p>根据定义的理解，我认为就是发送进程要一次性把所有消息传给其他进程，接受进程根据时间戳来排序所有消息，所以修改的全序多播为：（&#x3D;&#x3D;不一定正确&#x3D;&#x3D;）</p>
+<table>
+<thead>
+<tr>
+<th>Process P1</th>
+<th>Process P2</th>
+<th>Process P3</th>
+<th>Process P4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sends m1</td>
+<td>receives m1</td>
+<td>receives m1</td>
+<td>sends m3</td>
+</tr>
+<tr>
+<td>sends m2</td>
+<td>receives m2</td>
+<td>receives m2</td>
+<td>sends m4</td>
+</tr>
+<tr>
+<td></td>
+<td>receives m3</td>
+<td>receives m3</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>receives m4</td>
+<td>receives m4</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="23年分布式考试真题"><a href="#23年分布式考试真题" class="headerlink" title="23年分布式考试真题"></a>23年分布式考试真题</h2><ol>
+<li>介绍可伸缩性范畴和其技术</li>
+<li>覆盖网络的定义和其例子</li>
+<li>一个时间戳的题目（简单）</li>
+<li>一个Chord的题目（简单）</li>
+<li>A,B副本更新，什么时候会不一致，为什么</li>
+<li>什么是顺序一致性和线性一致性</li>
+<li>分布式算法流程的优缺点</li>
+<li>Lamport递归算法题目（例题原题！）</li>
+</ol>
+
+        
+      </div>
+
+         
+    </div>
+    
+     
+  </div>
+  
+    
+<nav id="article-nav">
+  <a class="article-nav-btn left "
+    
+      href="/2024/01/11/test/"
+      title="test"
+     >
+    <i class="fa-solid fa-angle-left"></i>
+    <p class="title-text">
+      
+        test
+        
+    </p>
+  </a>
+  <a class="article-nav-btn right  disabled "
+     >
+
+    <p class="title-text">
+        
+    </p>
+    <i class="fa-solid fa-angle-right"></i>
+  </a>
+</nav>
+
+
+  
+</article>
+
+
+  
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <div id="comment-card" class="comment-card">
+    <div class="main-title-bar">
+      <div class="main-title-dot"></div>
+      <div class="main-title">Comments </div>
+    </div>
+    <div id="vcomments"></div>
+  </div>
+  <script>
+      new Valine({"enable":true,"appId":null,"appKey":null,"placeholder":"Just go go","pageSize":10,"highlight":true,"serverURLs":null,"el":"#vcomments"});
+  </script>
+
+
+
+
+    </div>
+    <div id="footer-wrapper">
+      <footer id="footer">
+  
+  <div id="footer-info" class="inner">
+    
+    &copy; 2024 追着光梦游<br>
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/saicaca/hexo-theme-vivia">Vivia</a>
+  </div>
+</footer>
+
+    </div>
+    <div class="back-to-top-wrapper">
+    <button id="back-to-top-btn" class="back-to-top-btn hide" onclick="topFunction()">
+        <i class="fa-solid fa-angle-up"></i>
+    </button>
+</div>
+
+<script>
+    function topFunction() {
+        window.scroll({ top: 0, behavior: 'smooth' });
+    }
+    let btn = document.getElementById('back-to-top-btn');
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            btn.classList.remove('hide')
+        } else {
+            btn.classList.add('hide')
+        }
+    }
+    window.onscroll = function() {
+        scrollFunction();
+    }
+</script>
+
+  </div>
+  <script src="/js/light-dark-switch.js"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
